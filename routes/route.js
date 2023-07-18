@@ -1,9 +1,9 @@
-const index = require('./index');
-const bookRouter = require('./book');
+const indexRouter = require('./indexRouter');
+const bookRouter = require('./bookRouter');
 
 function route(app) {
     app.use('/api/books', bookRouter);
-    app.use('/', index); //Home page
+    app.use('/', indexRouter); //Home page
 }
 
 module.exports = route;

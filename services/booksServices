@@ -1,0 +1,32 @@
+const book = require('../domains/models/book');
+
+async function getBookByFilter(filter) {
+    return book.find(filter);
+}
+
+async function getAllBooks() {
+    const filter = {};
+    return getBookByFilter(filter);
+}
+
+async function getBookById(id) {
+    return book.findById(id);
+}
+
+async function storeNewBook(body) {
+    const newBook = new book(body);
+    await newBook.save();
+    //counter.incCounter('book');
+}
+
+async function updateById(id, body) {
+    return book.updateOne({ _id: id }, body);
+}
+
+module.exports = {
+    getBookByFilter,
+    getBookById,
+    getAllBooks,
+    storeNewBook,
+    updateById,
+};

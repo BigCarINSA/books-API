@@ -13,7 +13,7 @@ mongoose
         console.log('Connected to database');
     })
     .catch((err) => {
-        console.log('err');
+        console.log(err.message);
     });
 
 //body parser middleware

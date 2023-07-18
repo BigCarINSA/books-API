@@ -1,38 +1,46 @@
 const book = require('../domains/models/book');
-const counter = require('./counterController');
-const express = require('express');
+const booksServices = require('../services/booksServices');
+//const counter = require('./counterController');
 
 class BookController {
     //show all books
-    async show(req, res, next) {
+    async getAllBooks(req, res, next) {
         try {
             // Find out why the following comment code can't run (books will get value {} instead)
             // const query = await book.find({});
             // const books = await query.exec();
-            const books = await book.find({}).exec();
-            res.send(books);
+            const books = await booksServices.getAllBooks().exec();
+            if (books) {
+                res.send(books);
+            } else {
+                res.send('No books found!');
+            }
         } catch (err) {
             res.send(err.message);
         }
     }
 
     //show a book by its id
-    async showById(req, res, next) {
+    async getBookById(req, res, next) {
         try {
-            const bookToFind = await book.findById(req.params.id).exec();
-            res.send(bookToFind);
+            const bookToFind = await booksServices.getBookById(req.params.id);
+            if (bookToFind) {
+                res.send(bookToFind);
+            } else {
+                res.send('No book with id ' + req.params.id + ' found!');
+            }
         } catch (err) {
             res.send(err.message);
         }
     }
 
     //store new book
-    async store(req, res, next) {
+    async addBook(req, res, next) {
         //res.send(req.body);
-        if (await counter.isMax('book')) {
-            res.send('Book reached max!');
-            return;
-        }
+        // if (await counter.isMax('book')) {
+        //     res.send('Book reached max!');
+        //     return;
+        // }
 
         const books = await book.countDocuments(req.body);
         if (books > 0) {
@@ -41,9 +49,7 @@ class BookController {
         }
 
         try {
-            const newBook = new book(req.body);
-            await newBook.save();
-            counter.incCounter('book');
+            await booksServices.storeNewBook(req.body);
             res.send('Update book successfully!');
             //res.redirect('/');
         } catch (err) {
@@ -54,8 +60,8 @@ class BookController {
     //update a book
     async updateById(req, res, next) {
         try {
-            const ressult = await book
-                .updateOne({ _id: req.params.id }, req.body)
+            const ressult = await booksServices
+                .updateById(req.params.id, req.body)
                 .exec();
             if (ressult.modifiedCount === 1) {
                 res.send('Edit book successfully!');
@@ -73,7 +79,7 @@ class BookController {
             const ressult = await book.deleteOne({ _id: req.params.id }).exec();
             if (ressult.deletedCount === 1) {
                 res.send('Book deleted successfully!');
-                counter.descCounter('book');
+                //counter.descCounter('book');
             } else {
                 res.send('Book not existed');
             }
