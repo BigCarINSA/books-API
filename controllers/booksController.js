@@ -9,7 +9,7 @@ class BookController {
             // Find out why the following comment code can't run (books will get value {} instead)
             // const query = await book.find({});
             // const books = await query.exec();
-            const books = await booksServices.getAllBooks().exec();
+            const books = await booksServices.getAllBooks();
             if (books) {
                 res.send(books);
             } else {
@@ -60,9 +60,10 @@ class BookController {
     //update a book
     async updateById(req, res, next) {
         try {
-            const ressult = await booksServices
-                .updateById(req.params.id, req.body)
-                .exec();
+            const ressult = await booksServices.updateById(
+                req.params.id,
+                req.body
+            );
             if (ressult.modifiedCount === 1) {
                 res.send('Edit book successfully!');
             } else {
@@ -82,6 +83,23 @@ class BookController {
                 //counter.descCounter('book');
             } else {
                 res.send('Book not existed');
+            }
+        } catch (err) {
+            res.send(err.message);
+        }
+    }
+
+    //buy a book
+    async buyBookById(req, res, next) {
+        try {
+            const ressult = await booksServices.buyBookById(
+                req.params.id,
+                req.body.quantity
+            );
+            if (ressult) {
+                res.send('Book buy succeeded!');
+            } else {
+                res.send('Book buy failed!');
             }
         } catch (err) {
             res.send(err.message);
