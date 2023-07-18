@@ -3,9 +3,9 @@ const router = express.Router();
 
 const booksController = require('../controllers/booksController');
 
-router.get('/', booksController.show);
-router.post('/store', booksController.store);
-router.get('/:id', booksController.showById);
+router.get('/', booksController.getAllBooks);
+router.post('/store', booksController.addBook);
+router.get('/:id', booksController.getBookById);
 router.put('/:id/update', booksController.updateById);
 router.delete('/:id', booksController.deleteById);
 
