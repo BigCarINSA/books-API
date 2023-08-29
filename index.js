@@ -2,13 +2,16 @@ const express = require('express');
 const mongoose = require('mongoose');
 const route = require('./routes/route');
 const bodyParser = require('body-parser');
+const mysql = require('mysql');
 
 const app = express();
 const port = process.env.PORT || 8000;
+const dbURL =
+    process.env.DB_URL || 'mongodb://127.0.0.1:27017/books_managements_dev';
 
 // conect to database
 mongoose
-    .connect('mongodb://127.0.0.1:27017/books_managements_dev')
+    .connect(dbURL)
     .then(() => {
         console.log('Connected to database');
     })
